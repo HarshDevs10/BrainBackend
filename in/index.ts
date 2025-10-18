@@ -378,7 +378,7 @@ const main = () => {
                 app.listen(3000)
                 console.log("The backend is connected to the database.")
             })
-            .catch(err => {console.log("Data base is not connected due to: " + err); console.log(process.env.JWT_SECRET)})
+            .catch(err => {console.log("Data base is not connected due to: " + err)})
 }
 
 main()
