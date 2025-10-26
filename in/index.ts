@@ -17,7 +17,10 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+    origin: process.env.FRONT_END_HOST,
+    credentials: true
+}))
 
 app.post('/api/v1/Signup', async (req, res) => {
 
@@ -122,7 +125,10 @@ app.post('/api/v1/Signin', async (req, res) => {
             })
         }
         
-        return res.status(200).cookie("uid", token).json({
+        return res.status(200).cookie("uid", token, {
+            httpOnly: true,
+            sameSite: "none"
+        }).json({
             message: "Signin is successful"
         })
     }
