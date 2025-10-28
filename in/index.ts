@@ -127,7 +127,8 @@ app.post('/api/v1/Signin', async (req, res) => {
         
         return res.status(200).cookie("uid", token, {
             httpOnly: true,
-            sameSite: "none"
+            sameSite: "none",
+            secure: true
         }).json({
             message: "Signin is successful"
         })
@@ -142,7 +143,7 @@ app.post('/api/v1/Signin', async (req, res) => {
 
 app.post('/api/v1/content', middleware, async (req, res) => {
     const content = z.object({
-        link: z.string(),
+        url: z.string(),
         type: z.string(),
         title: z.string().max(250).min(3),
         tags: z.string()
@@ -159,7 +160,7 @@ app.post('/api/v1/content', middleware, async (req, res) => {
     }
 
     const Id = (req as any).Id
-    const link = ParsedReq.data.link
+    const url = ParsedReq.data.url
     const type = ParsedReq.data.type
     const title = ParsedReq.data.title
     const tags = ParsedReq.data.tags
@@ -198,7 +199,7 @@ app.post('/api/v1/content', middleware, async (req, res) => {
     try{
         console.log(obj)
         const user = await contentModel.create({
-            link: link,
+            url: url,
             type: type,
             title: title,
             tags: obj,
