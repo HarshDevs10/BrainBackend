@@ -244,16 +244,19 @@ app.get('/api/v1/content', middleware, async (req, res) => {
 })
 
 app.delete('/api/v1/content', middleware, async (req, res) => {
-    const contentId = req.body.contentId
-    console.log(contentId)
+    const url = req.body.url
+    const title = req.body.title
+    const type = req.body.type
     let content = null
 
     try{
-        content = await contentModel.findByIdAndDelete(contentId)
-                    .populate("tags")
-                    .populate("userId", "userName")
+        content = await contentModel.deleteOne({
+            url: url,
+            title: title,
+            type: type
+        })
 
-        if(!content){
+        if(!content.acknowledged){
             return res.status(500).json({
                 message: "This content is not present"
             })
@@ -267,8 +270,7 @@ app.delete('/api/v1/content', middleware, async (req, res) => {
     }
 
     return res.status(200).json({
-        message: "Your content is successfully deleted.",
-        content: content
+        message: "Your content is successfully deleted."
     })
 })
 
