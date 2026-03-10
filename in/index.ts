@@ -153,6 +153,7 @@ app.post('/api/v1/content', middleware, async (req, res) => {
     console.log(ParsedReq)
 
     if(!ParsedReq.success){
+        console.log("parse error")
         return res.status(400).json({
             message: "An error occured while validating the input",
             err: ParsedReq.error.cause
@@ -198,6 +199,7 @@ app.post('/api/v1/content', middleware, async (req, res) => {
 
     try{
         console.log(obj)
+        console.log("User ID:", Id)
         const user = await contentModel.create({
             url: url,
             type: type,
