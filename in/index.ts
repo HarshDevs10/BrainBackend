@@ -9,6 +9,7 @@ import middleware from './middleware.js';
 import Hased from './hash.js';
 import cors from 'cors'
 import * as dotenv from 'dotenv';
+import { tr } from 'zod/locales';
 dotenv.config();
 
 const { userModel, linkModel, tagModel, contentModel } = models
@@ -51,8 +52,10 @@ app.post('/api/v1/Signup', async (req, res) => {
     const password = ParsedReq.data.password
 
     const hashPassword = await bcrypt.hash(password, 5)
+    let user = null
+
     try{
-        const user = await userModel.create({
+        user = await userModel.create({
             userName: userName,
             password: hashPassword
         })
@@ -64,9 +67,33 @@ app.post('/api/v1/Signup', async (req, res) => {
         })
     }
 
-    res.status(200).json({
-        message: "you have signed up successfully"
-    })
+    let token = null
+    try{
+            token = jwt.sign({id: user._id}, secret!)
+            console.log(token)
+        }
+    catch(error){
+        return res.status(403).json({
+            message: "The token cannot be generated",
+            err: error
+        })
+    }
+
+    if(token){
+        return res.status(200).cookie("uid", token, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true
+        }).json({
+            message: "Signup is successful"
+        })
+    }
+    else{
+        return res.status(401).json({
+            message: "Unable to create the token"
+        })
+    }
+
 })
 
 app.post('/api/v1/Signin', async (req, res) => {
@@ -80,7 +107,7 @@ app.post('/api/v1/Signin', async (req, res) => {
     console.log(ParsedReq)
 
     if(ParsedReq.success == false){
-        return res.status(411).json({
+        return res.status(400).json({
             message: "an error occured while validating the input",
             err: ParsedReq.error.issues[0]?.message
         })
