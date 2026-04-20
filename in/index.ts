@@ -410,13 +410,18 @@ app.get('/api/v1/:sharelink', async (req, res) => {
 
 })
 
+const PORT = process.env.PORT || 3000;
+
 const main = () => {
     mongoose.connect(process.env.MONGOOSE_URL!)
-            .then(() => {
-                app.listen(3000)
-                console.log("The backend is connected to the database.")
-            })
-            .catch(err => {console.log("Data base is not connected due to: " + err)})
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`Server running on port ${PORT}`);
+            });
+        })
+        .catch(err => {
+            console.log("Database connection failed: " + err);
+        });
 }
 
-main()
+main();
