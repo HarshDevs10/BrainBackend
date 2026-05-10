@@ -417,6 +417,7 @@ const main = () => {
         .then(() => {
             app.listen(PORT, () => {
                 console.log(`Server running on port ${PORT}`);
+                console.log("Server connected to Backend");
             });
         })
         .catch(err => {

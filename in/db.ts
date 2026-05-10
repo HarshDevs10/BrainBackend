@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 const Model = mongoose.Model
 const ObjectID = Schema.Types.ObjectId
-const options = ["youtube", "Document", "image", "audio", "tweet"]
+const options = ["youtube", "Document", "image", "audio", "tweet", "reel"]
 
 const UserSchema = new Schema({
     userName: {type: String, unique: true, required: true},
